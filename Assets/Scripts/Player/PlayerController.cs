@@ -33,16 +33,16 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        grounded = feet.IsTouchingLayers(LayerMask.GetMask("Ground"));
-        anim.SetBool("grounded", grounded);
-
         if (onGlider)
         {
             GliderMovement();
+            anim.SetBool("grounded", true);
         }
         else
         {
             GroundMovement();
+            grounded = feet.IsTouchingLayers(LayerMask.GetMask("Ground"));
+            anim.SetBool("grounded", grounded);
         }
         
 
@@ -68,6 +68,7 @@ public class PlayerController : MonoBehaviour
             onGlider = !onGlider;
             glider.Mount();
             rb.isKinematic = true;
+            sprite.flipX = false;
         }
     }
 
@@ -88,16 +89,8 @@ public class PlayerController : MonoBehaviour
 
         if (Mathf.Abs(rb.velocity.x) > 0)
         {
-            switch (Mathf.Sign(rb.velocity.x))
-            {
-                case 1:
-                    sprite.flipX = false;
-                break;
-
-                case -1:
-                    sprite.flipX = true;
-                break;
-            }
+            if (Mathf.Sign(rb.velocity.x) == 1) { sprite.flipX = false; }
+            else if (Mathf.Sign(rb.velocity.x) == -1) { sprite.flipX = true; }
         }
 
         if (Input.GetKeyDown(KeyCode.Space) && grounded) 
@@ -119,17 +112,17 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        //if (!onGlider)
-        //{
-        //    Glider collGlider = collision.gameObject.GetComponent<Glider>();
-        //    if (collGlider != null)
-        //    {
-        //        if (collGlider.temp)
-        //        {
-        //            glider.Mount();
-        //            print("temp glider");
-        //        }
-        //    }
-        //}
+        if (!onGlider)
+        {
+            TempGlider collGlider = collision.gameObject.GetComponent<TempGlider>();
+            if (collGlider != null && collGlider.colliding)
+            {
+                glider.Mount();
+                onGlider = true;
+                rb.isKinematic = true;
+                sprite.flipX = false;
+                collGlider.colliding = false;
+            }
+        }
     }
 }

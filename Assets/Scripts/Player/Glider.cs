@@ -6,10 +6,7 @@ public class Glider : MonoBehaviour
 {
     [SerializeField] GameObject gliderPrefab;
 
-    // whether or not this is a temp glider for when dismounting
-    [HideInInspector] public bool temp = false;
-
-    GameObject tempGlider = null;
+    TempGlider tempGlider = null;
 
     // Update is called once per frame
     void Update()
@@ -22,23 +19,26 @@ public class Glider : MonoBehaviour
         gameObject.SetActive(false);
         if (tempGlider == null)
         {
-            tempGlider = Instantiate(gliderPrefab, transform.position, transform.rotation);
+            GameObject tempGliderObject = Instantiate(gliderPrefab, transform.position, transform.rotation);
+            tempGlider = tempGliderObject.GetComponent<TempGlider>();
             tempGlider.transform.parent = null;
             // TODO gradually rotate back to upright
             tempGlider.transform.rotation = Quaternion.Euler(0, 0, Mathf.Lerp(transform.rotation.z, 0, 0.5f));
-            tempGlider.GetComponent<Glider>().temp = true;
+            tempGlider.Activate();
+            
         }
         else
         {
-            tempGlider.SetActive(true);
+            tempGlider.gameObject.SetActive(true);
             tempGlider.transform.position = transform.position;
             tempGlider.transform.rotation = Quaternion.Euler(0, 0, 0);
+            tempGlider.Activate();
         }
     }
 
     public void Mount()
     {
         gameObject.SetActive(true);
-        tempGlider.SetActive(false);
+        tempGlider.gameObject.SetActive(false);
     }
 }

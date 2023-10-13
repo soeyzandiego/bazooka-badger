@@ -436,13 +436,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4728125, guid: 8494deffd7244584587a357121f399ec, type: 3}
+      propertyPath: m_Name
+      value: Glider
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728126, guid: 8494deffd7244584587a357121f399ec, type: 3}
+      propertyPath: gliderPrefab
+      value: 
+      objectReference: {fileID: 1382368552615744991, guid: ab15a5c0a2c3a8247bc9095dff721d32, type: 3}
     - target: {fileID: 758422286, guid: 8494deffd7244584587a357121f399ec, type: 3}
       propertyPath: jumpForce
       value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 1376382738213349964, guid: 8494deffd7244584587a357121f399ec, type: 3}
       propertyPath: m_Name
-      value: player
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 6095590102691218119, guid: 8494deffd7244584587a357121f399ec, type: 3}
       propertyPath: m_RootOrder
@@ -487,6 +495,14 @@ PrefabInstance:
     - target: {fileID: 6095590102691218119, guid: 8494deffd7244584587a357121f399ec, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6273360577458064897, guid: 8494deffd7244584587a357121f399ec, type: 3}
+      propertyPath: m_Name
+      value: ShootPoint
+      objectReference: {fileID: 0}
+    - target: {fileID: 7597557838930499684, guid: 8494deffd7244584587a357121f399ec, type: 3}
+      propertyPath: m_Name
+      value: Feet
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8494deffd7244584587a357121f399ec, type: 3}
