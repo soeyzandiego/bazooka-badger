@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Platform : MonoBehaviour
 {
-    float scrollSpeed;
+    bool moving = true;
 
     // Start is called before the first frame update
     void Start()
@@ -15,11 +15,9 @@ public class Platform : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-    }
-
-    public void SetSpeed(float _speed)
-    {
-        scrollSpeed = _speed;
+        if (moving)
+        {
+            transform.position -= new Vector3(PlatformManager.scrollSpeed * Time.deltaTime, 0);
+        }
     }
 }

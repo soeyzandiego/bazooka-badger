@@ -4,15 +4,11 @@ using UnityEngine;
 
 public class TempGlider : MonoBehaviour
 {
-    Collider2D coll;
-
     [HideInInspector] public bool colliding = false;
 
-    // Start is called before the first frame update
-    void Start()
+    void Update()
     {
-        coll = GetComponent<BoxCollider2D>();
-        
+        transform.position -= new Vector3(PlatformManager.scrollSpeed * Time.deltaTime, 0);
     }
 
     public void Activate()

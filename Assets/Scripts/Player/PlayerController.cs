@@ -110,6 +110,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // TODO change to raycast, so can only mount from top
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (!onGlider)

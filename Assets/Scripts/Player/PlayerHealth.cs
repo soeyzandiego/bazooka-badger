@@ -27,4 +27,9 @@ public class PlayerHealth : MonoBehaviour
     {
         curHealth += value;
     }
+
+    void UpdateHearts()
+    {
+
+    }
 }

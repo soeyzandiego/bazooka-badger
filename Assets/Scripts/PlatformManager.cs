@@ -7,6 +7,8 @@ public class PlatformManager : MonoBehaviour
     [SerializeField] int spawnAmount;
     [SerializeField] GameObject[] prefabs;
 
+    public static float scrollSpeed = 1f;
+
     List<Platform> platforms = new List<Platform>();
 
     // Start is called before the first frame update
