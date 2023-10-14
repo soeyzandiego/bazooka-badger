@@ -6,18 +6,30 @@ public class Platform : MonoBehaviour
 {
     bool moving = true;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
         if (moving)
         {
             transform.position -= new Vector3(PlatformManager.scrollSpeed * Time.deltaTime, 0);
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+        if (player != null)
+        {
+            player.transform.parent = transform;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+        if (player != null)
+        {
+            player.transform.parent = null;
         }
     }
 }

@@ -14,7 +14,8 @@ GameObject:
   - component: {fileID: 2633546988645761552}
   - component: {fileID: 758422286}
   - component: {fileID: 1141665512}
-  m_Layer: 0
+  - component: {fileID: 566886581}
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -147,7 +148,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xSpeed: 6.5
   ySpeed: 5
-  jumpForce: 8.5
+  jumpForce: 9
+  castDist: 1.01
   dismountForce: 5
   bulletPrefab: {fileID: 2120156550767168977, guid: b68954c8056d2f3479efcd2020f2d397, type: 3}
   shootPoint: {fileID: 7564020358121081549}
@@ -178,6 +180,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.0208256, y: 1.9678788}
   m_EdgeRadius: 0
+--- !u!114 &566886581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1376382738213349964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e577e748afb3dc74abffdc8219feb8f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 3
 --- !u!1 &6273360577458064897
 GameObject:
   m_ObjectHideFlags: 0
@@ -188,9 +203,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7564020358121081549}
   m_Layer: 0
-  m_Name: shootPoint
+  m_Name: ShootPoint
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -220,7 +235,7 @@ GameObject:
   - component: {fileID: 3028828962803713320}
   - component: {fileID: 622926419}
   m_Layer: 0
-  m_Name: feet
+  m_Name: Feet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -277,10 +292,10 @@ PrefabInstance:
     - target: {fileID: 895624621741559221, guid: c840f43e3d924054ab1a29a68c854888, type: 3}
       propertyPath: gliderPrefab
       value: 
-      objectReference: {fileID: 895624621741559222, guid: c840f43e3d924054ab1a29a68c854888, type: 3}
+      objectReference: {fileID: 1382368552615744991, guid: ab15a5c0a2c3a8247bc9095dff721d32, type: 3}
     - target: {fileID: 895624621741559222, guid: c840f43e3d924054ab1a29a68c854888, type: 3}
       propertyPath: m_Name
-      value: glider
+      value: Glider
       objectReference: {fileID: 0}
     - target: {fileID: 895624621741559222, guid: c840f43e3d924054ab1a29a68c854888, type: 3}
       propertyPath: m_IsActive

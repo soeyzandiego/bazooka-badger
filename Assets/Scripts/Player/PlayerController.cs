@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] float xSpeed = 5;
-    [SerializeField] float ySpeed = 5;
-    [SerializeField] float jumpForce = 3;
+    [SerializeField] float xSpeed = 5f;
+    [SerializeField] float ySpeed = 5f;
+
+    [Header("Jumping")]
+    [SerializeField] float jumpForce = 3f;
+    [SerializeField] float castDist = 1f;
     [SerializeField] float dismountForce = 3.5f;
+
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] Transform shootPoint;
     [SerializeField] Collider2D feet;
@@ -15,11 +19,14 @@ public class PlayerController : MonoBehaviour
     bool onGlider = true;
     bool grounded = true;
 
-    // Component References
+    // component references
     Animator anim;
     Rigidbody2D rb;
     SpriteRenderer sprite;
     Glider glider;
+
+    float horAxis;
+    float verAxis;
 
     // Start is called before the first frame update
     void Start()
@@ -33,16 +40,31 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        horAxis = Input.GetAxis("Horizontal");
+        verAxis = Input.GetAxis("Vertical");
+
         if (onGlider)
         {
-            GliderMovement();
             anim.SetBool("grounded", true);
         }
         else
         {
-            GroundMovement();
-            grounded = feet.IsTouchingLayers(LayerMask.GetMask("Ground"));
             anim.SetBool("grounded", grounded);
+            // TODO move this and velocity cut out of FixedUpdate
+            if (Input.GetKeyDown(KeyCode.Space) && grounded)
+            {
+                rb.velocity += new Vector2(0, jumpForce);
+            }
+
+            // cut the velocity of the jump if space is let go
+            if (!grounded)
+            {
+                if (Input.GetKeyUp(KeyCode.Space))
+                {
+                    float _yVel = rb.velocity.y / 1.5f;
+                    rb.velocity = new Vector2(rb.velocity.x, _yVel);
+                }
+            }
         }
         
 
@@ -72,10 +94,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void FixedUpdate()
+    {
+        if (onGlider) { GliderMovement(); }
+        else { GroundMovement(); }
+    }
+
     void GliderMovement()
     {
-        float horAxis = Input.GetAxis("Horizontal");
-        float verAxis = Input.GetAxis("Vertical");
         rb.velocity = new Vector2(horAxis * xSpeed, verAxis * ySpeed);
 
         transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, -rb.velocity.x);
@@ -84,7 +110,6 @@ public class PlayerController : MonoBehaviour
     void GroundMovement()
     {
         transform.rotation = Quaternion.Euler(Vector3.zero);
-        float horAxis = Input.GetAxis("Horizontal");
         rb.velocity = new Vector2(horAxis * xSpeed, rb.velocity.y);
 
         if (Mathf.Abs(rb.velocity.x) > 0)
@@ -93,21 +118,20 @@ public class PlayerController : MonoBehaviour
             else if (Mathf.Sign(rb.velocity.x) == -1) { sprite.flipX = true; }
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && grounded) 
-        { 
-            rb.velocity += new Vector2(0, jumpForce);
-            anim.SetTrigger("jump");
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, castDist, LayerMask.GetMask("Ground"));
+        Debug.DrawRay(transform.position, Vector2.down * castDist, Color.red);
+
+        if (hit.collider != null)
+        {
+            grounded = true;
+            transform.parent = hit.collider.transform;
+        }
+        else
+        {
+            grounded = false;
+            transform.parent = null;
         }
 
-        // cut the velocity of the jump if space is let go
-        if (!grounded)
-        {
-            if (Input.GetKeyUp(KeyCode.Space))
-            {
-                float _yVel = rb.velocity.y / 1.5f;
-                rb.velocity = new Vector2(rb.velocity.x, _yVel);
-            }
-        }
     }
 
     // TODO change to raycast, so can only mount from top
@@ -125,5 +149,11 @@ public class PlayerController : MonoBehaviour
                 collGlider.colliding = false;
             }
         }
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, Vector2.down * castDist);
     }
 }

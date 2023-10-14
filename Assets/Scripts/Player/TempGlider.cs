@@ -8,7 +8,8 @@ public class TempGlider : MonoBehaviour
 
     void Update()
     {
-        transform.position -= new Vector3(PlatformManager.scrollSpeed * Time.deltaTime, 0);
+        float speed = PlatformManager.scrollSpeed / 1.5f;
+        transform.position -= new Vector3(speed * Time.deltaTime, 0);
     }
 
     public void Activate()
@@ -19,7 +20,7 @@ public class TempGlider : MonoBehaviour
 
     IEnumerator ActivateTemp()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.6f);
         colliding = true;
     }
 }
