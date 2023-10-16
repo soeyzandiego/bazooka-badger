@@ -14,43 +14,45 @@ public class PlayerHealth : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        curHealth = 5;
+        curHealth = maxHealth;
         UpdateHearts();
     }
 
     // Update is called once per frame
     void Update()
     {
+        
+    }
+
+    public void Damage(int value)
+    {
+        curHealth -= value;
+        UpdateHearts();
+
         if (curHealth <= 0)
         {
-            // game over
+            GameManager.ChangeState(GameManager.GameState.GAME_OVER);
         }
     }
 
-    public void ModifyHealth(int value)
+    public void Heal(int value)
     {
         curHealth += value;
+        UpdateHearts();
     }
 
     void UpdateHearts()
     {
         for (int i = 1; i < maxHealth; i += 2)
         {
-            if (i + 1 < curHealth) 
-            { 
-                targetImages[((i+1) / 2) - 1].sprite = heartSprites[0];
-                Debug.Log("full heart");
-            }
-            else if (i == curHealth) 
-            { 
-                targetImages[((i + 1) / 2) - 1].sprite = heartSprites[1];
-                Debug.Log("half heart");
-            }
-            else 
-            { 
-                targetImages[((i + 1) / 2) - 1].sprite = heartSprites[2];
-                Debug.Log("empty heart");
-            }
+            if (i + 1 <= curHealth) { targetImages[((i+1) / 2) - 1].sprite = heartSprites[0]; }
+            else if (i == curHealth) { targetImages[((i + 1) / 2) - 1].sprite = heartSprites[1]; }
+            else { targetImages[((i + 1) / 2) - 1].sprite = heartSprites[2]; }
         }
+    }
+
+    public float HealthPercentage()
+    {
+        return curHealth / maxHealth;
     }
 }

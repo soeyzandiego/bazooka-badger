@@ -25,10 +25,8 @@ public class Bullet : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.GetComponent<Bullet>() != null) { return; } // don't let bullets collide with each other
-        if (collision.GetComponent<PlayerHealth>() != null)
-        {
-            collision.GetComponent<PlayerHealth>().ModifyHealth(-1);
-        }
+        if (collision.GetComponent<PlayerHealth>() != null) { collision.GetComponent<PlayerHealth>().Damage(1); }
+        else if (collision.GetComponent<EnemyHealth>() != null) { collision.GetComponent<EnemyHealth>().Damage(1); }
         else if (collision.tag == "Shredder") { Destroy(gameObject); }
         Destroy(gameObject);
     }

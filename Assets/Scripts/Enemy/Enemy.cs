@@ -14,7 +14,6 @@ public class Enemy : MonoBehaviour
 
     float shootTimer;
 
-
     PlayerController playerRef;
     int playerDir;
 
@@ -51,5 +50,11 @@ public class Enemy : MonoBehaviour
         GameObject newBulletObject = Instantiate(bulletPrefab, shootPoint.position, Quaternion.Euler(Vector3.zero));
         Bullet newBullet = newBulletObject.GetComponent<Bullet>();
         newBullet.SetDir(new Vector2(playerDir, 0));
+    }
+
+    public void Kill()
+    {
+        GameManager.ModifyScore(pointValue);
+        Destroy(this);
     }
 }

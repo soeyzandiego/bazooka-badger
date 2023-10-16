@@ -14,7 +14,6 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] Transform shootPoint;
-    [SerializeField] Collider2D feet;
 
     bool onGlider = true;
     bool grounded = true;
@@ -43,12 +42,11 @@ public class PlayerController : MonoBehaviour
         horAxis = Input.GetAxis("Horizontal");
         verAxis = Input.GetAxis("Vertical");
 
-        if (onGlider)
+        anim.SetBool("onGlider", onGlider);
+
+        if (!onGlider)
         {
-            anim.SetBool("grounded", true);
-        }
-        else
-        {
+            anim.SetBool("running", Mathf.Abs(horAxis) > 0.1f);
             anim.SetBool("grounded", grounded);
             // TODO move this and velocity cut out of FixedUpdate
             if (Input.GetKeyDown(KeyCode.Space) && grounded)
@@ -147,7 +145,11 @@ public class PlayerController : MonoBehaviour
                 rb.isKinematic = true;
                 sprite.flipX = false;
                 collGlider.colliding = false;
+                return;
             }
+
+            IPickup pickup = collision.gameObject.GetComponent<IPickup>();
+            if (pickup != null) { pickup.PickUp(); }
         }
     }
 

@@ -4,21 +4,22 @@ using UnityEngine;
 
 public class PlatformManager : MonoBehaviour
 {
-    [SerializeField] int spawnAmount;
+    [Header("Spawn Area")]
+    [SerializeField] float maxY;
+
     [SerializeField] GameObject[] prefabs;
 
-    public static float scrollSpeed = 1f;
+    public static float scrollSpeed = 1.5f;
 
     List<Platform> platforms = new List<Platform>();
 
     // Start is called before the first frame update
     void Start()
     {
-        for (int i = 0; i < spawnAmount; i++)
+        foreach (Platform newPlatform in GetComponentsInChildren<Platform>())
         {
-            GameObject rPrefab = prefabs[Random.Range(0, prefabs.Length)];
-            GameObject newPlatformObject = Instantiate(rPrefab, transform);
-            Platform newPlatform = newPlatformObject.GetComponent<Platform>();
+            float newY = Random.Range(-maxY, maxY);
+            newPlatform.transform.position = new Vector2(newPlatform.transform.position.x, newY);
             platforms.Add(newPlatform);
         }
     }
@@ -27,5 +28,10 @@ public class PlatformManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireCube(new Vector3(9, 0), new Vector3(5, maxY * 2));
     }
 }
