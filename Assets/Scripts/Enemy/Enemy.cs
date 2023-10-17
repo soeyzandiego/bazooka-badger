@@ -55,6 +55,7 @@ public class Enemy : MonoBehaviour
     public void Kill()
     {
         GameManager.ModifyScore(pointValue);
-        Destroy(this);
+        Destroy(gameObject);
+        Destroy(this); // if for later, want to do a dead state where the body is on the ground
     }
 }

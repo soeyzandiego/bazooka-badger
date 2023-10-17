@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    [SerializeField] int damage = 1;
     [SerializeField] float speed = 13;
     Vector2 dir = Vector2.right;
 
@@ -25,10 +26,25 @@ public class Bullet : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.GetComponent<Bullet>() != null) { return; } // don't let bullets collide with each other
-        if (collision.GetComponent<PlayerHealth>() != null) { collision.GetComponent<PlayerHealth>().Damage(1); }
-        else if (collision.GetComponent<EnemyHealth>() != null) { collision.GetComponent<EnemyHealth>().Damage(1); }
-        else if (collision.tag == "Shredder") { Destroy(gameObject); }
-        Destroy(gameObject);
+        if (collision.GetComponent<PlayerHealth>() != null) 
+        { 
+            collision.GetComponent<PlayerHealth>().Damage(damage);
+            Destroy(gameObject);
+        }
+        else if (collision.GetComponent<EnemyHealth>() != null) 
+        { 
+            collision.GetComponent<EnemyHealth>().Damage(damage);
+            Destroy(gameObject);
+        }
+        else if (collision.GetComponent<Shield>() != null)
+        {
+            collision.GetComponent<Shield>().DamageShield(damage);
+            Destroy(gameObject);
+        }
+        else if (collision.tag == "Shredder") 
+        { 
+            Destroy(gameObject); 
+        }
     }
 
     public void SetDir(Vector2 _dir)

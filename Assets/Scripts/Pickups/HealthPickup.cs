@@ -18,5 +18,7 @@ public class HealthPickup : MonoBehaviour, IPickup
     {
         if (playerHealth.HealthPercentage() == 1) { GameManager.ModifyScore(bonusValue); }
         else { playerHealth.Heal(1); }
+
+        Destroy(gameObject);
     }
 }

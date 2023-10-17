@@ -8,7 +8,7 @@ public class TempGlider : MonoBehaviour
 
     void Update()
     {
-        float speed = PlatformManager.scrollSpeed / 1.5f;
+        float speed = PlatformManager.scrollSpeed / 1.75f;
         transform.position -= new Vector3(speed * Time.deltaTime, 0);
     }
 

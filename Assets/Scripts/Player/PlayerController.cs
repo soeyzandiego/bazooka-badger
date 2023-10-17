@@ -12,8 +12,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float castDist = 1f;
     [SerializeField] float dismountForce = 3.5f;
 
+    [Header("Shoot")]
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] Transform shootPoint;
+
+    [Header("Audio")]
+    [SerializeField] AudioClip jumpSound;
+    [SerializeField] AudioClip shootSound;
 
     bool onGlider = true;
     bool grounded = true;
@@ -23,6 +28,8 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D rb;
     SpriteRenderer sprite;
     Glider glider;
+    AudioSource audioSource;
+    Shield shield;
 
     float horAxis;
     float verAxis;
@@ -34,6 +41,8 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
         glider = GetComponentInChildren<Glider>();
+        audioSource = GetComponent<AudioSource>();
+        shield = GetComponentInChildren<Shield>();
     }
 
     // Update is called once per frame
@@ -48,10 +57,11 @@ public class PlayerController : MonoBehaviour
         {
             anim.SetBool("running", Mathf.Abs(horAxis) > 0.1f);
             anim.SetBool("grounded", grounded);
-            // TODO move this and velocity cut out of FixedUpdate
+
             if (Input.GetKeyDown(KeyCode.Space) && grounded)
             {
                 rb.velocity += new Vector2(0, jumpForce);
+                audioSource.PlayOneShot(jumpSound);
             }
 
             // cut the velocity of the jump if space is let go
@@ -70,6 +80,12 @@ public class PlayerController : MonoBehaviour
         {
             Instantiate(bulletPrefab, shootPoint.position, Quaternion.Euler(Vector3.zero));
             anim.SetTrigger("shoot");
+            audioSource.PlayOneShot(shootSound);
+        }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            shield.Toggle();
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -80,16 +96,18 @@ public class PlayerController : MonoBehaviour
                 rb.isKinematic = false;
                 rb.velocity += new Vector2(dismountForce * Mathf.Sign(rb.velocity.x), dismountForce);
                 glider.Dismount();
+                audioSource.PlayOneShot(jumpSound);
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.M) && !onGlider)
-        {
-            onGlider = !onGlider;
-            glider.Mount();
-            rb.isKinematic = true;
-            sprite.flipX = false;
-        }
+        // for debugging
+        //if (Input.GetKeyDown(KeyCode.M) && !onGlider)
+        //{
+        //    onGlider = !onGlider;
+        //    glider.Mount();
+        //    rb.isKinematic = true;
+        //    sprite.flipX = false;
+        //}
     }
 
     void FixedUpdate()

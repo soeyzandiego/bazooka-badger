@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class PlayerHealth : MonoBehaviour
 {
     [SerializeField][Range(1, 8)] int maxHealth = 6;
+    [SerializeField] AudioClip hurtSound;
     [SerializeField] Image[] targetImages;
     [SerializeField] Sprite[] heartSprites;
 
@@ -18,11 +19,6 @@ public class PlayerHealth : MonoBehaviour
         UpdateHearts();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void Damage(int value)
     {
@@ -33,6 +29,8 @@ public class PlayerHealth : MonoBehaviour
         {
             GameManager.ChangeState(GameManager.GameState.GAME_OVER);
         }
+
+        GetComponent<AudioSource>().PlayOneShot(hurtSound);
     }
 
     public void Heal(int value)
