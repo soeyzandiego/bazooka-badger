@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//[RequireComponent(typeof(PlayerController))]
 public class PlayerHealth : MonoBehaviour
 {
     [SerializeField][Range(1, 8)] int maxHealth = 6;
@@ -12,9 +13,12 @@ public class PlayerHealth : MonoBehaviour
 
     int curHealth;
 
+    PlayerController controller;
+
     // Start is called before the first frame update
     void Start()
     {
+        controller = GetComponent<PlayerController>();
         curHealth = maxHealth;
         UpdateHearts();
     }
@@ -27,10 +31,11 @@ public class PlayerHealth : MonoBehaviour
 
         if (curHealth <= 0)
         {
+            controller.Kill();
             GameManager.ChangeState(GameManager.GameState.GAME_OVER);
         }
 
-        GetComponent<AudioSource>().PlayOneShot(hurtSound);
+        controller.PlayAudio(hurtSound);
     }
 
     public void Heal(int value)

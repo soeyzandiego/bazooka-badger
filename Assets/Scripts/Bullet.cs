@@ -29,6 +29,7 @@ public class Bullet : MonoBehaviour
         if (collision.GetComponent<PlayerHealth>() != null) 
         { 
             collision.GetComponent<PlayerHealth>().Damage(damage);
+            FindObjectOfType<ScreenShake>().ShakeScreen(0.08f, 0.2f);
             Destroy(gameObject);
         }
         else if (collision.GetComponent<EnemyHealth>() != null) 

@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
 
     bool onGlider = true;
     bool grounded = true;
+    bool dead = false;
 
     // component references
     Animator anim;
@@ -33,6 +34,7 @@ public class PlayerController : MonoBehaviour
 
     float horAxis;
     float verAxis;
+
 
     // Start is called before the first frame update
     void Start()
@@ -48,6 +50,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (dead) { return; }
+        
         horAxis = Input.GetAxis("Horizontal");
         verAxis = Input.GetAxis("Vertical");
 
@@ -83,10 +87,8 @@ public class PlayerController : MonoBehaviour
             audioSource.PlayOneShot(shootSound);
         }
 
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            shield.Toggle();
-        }
+        if (Input.GetKeyDown(KeyCode.C)) { shield.Activate(); }
+        if (Input.GetKeyUp(KeyCode.C)) { shield.Deactivate(); }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -169,6 +171,16 @@ public class PlayerController : MonoBehaviour
             IPickup pickup = collision.gameObject.GetComponent<IPickup>();
             if (pickup != null) { pickup.PickUp(); }
         }
+    }
+
+    public void PlayAudio(AudioClip sound)
+    {
+        audioSource.PlayOneShot(sound);
+    }
+
+    public void Kill()
+    {
+        dead = true;
     }
 
     void OnDrawGizmos()
