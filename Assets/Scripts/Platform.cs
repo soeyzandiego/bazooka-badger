@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Platform : MonoBehaviour
 {
+    [SerializeField] public bool ignoreSpawn = false;
+
     bool moving = true;
 
     // Update is called once per frame

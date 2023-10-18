@@ -25,6 +25,7 @@ public class EnemySpawner : MonoBehaviour
     {
         foreach (Platform curPlatform in platforms)
         {
+            if (curPlatform.ignoreSpawn) { return; }
             int roll = Random.Range(0, 101);
 
             foreach (SpawnInfo enemy in enemies)

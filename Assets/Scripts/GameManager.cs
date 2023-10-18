@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
         WAITING, 
         COUNTING_DOWN,
         PLAYING,
+        PAUSED,
         GAME_OVER
     };
 
@@ -48,6 +49,12 @@ public class GameManager : MonoBehaviour
             case GameState.GAME_OVER:
                 GameOver();
             break;
+        }
+
+        if (Input.GetKeyDown(KeyCode.R)) 
+        { 
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            score = 0;
         }
     }
 
