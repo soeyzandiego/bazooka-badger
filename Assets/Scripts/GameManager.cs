@@ -104,4 +104,9 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+    public void PlayAudio(AudioClip sound)
+    {
+
+    }
 }

@@ -20,18 +20,12 @@ public class Platform : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         PlayerController player = collision.gameObject.GetComponent<PlayerController>();
-        if (player != null)
-        {
-            player.transform.parent = transform;
-        }
+        if (player != null) { player.transform.parent = transform; }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
         PlayerController player = collision.gameObject.GetComponent<PlayerController>();
-        if (player != null)
-        {
-            player.transform.parent = null;
-        }
+        if (player != null) { player.transform.parent = null; }
     }
 }

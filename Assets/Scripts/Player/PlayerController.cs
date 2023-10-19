@@ -7,6 +7,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float xSpeed = 5f;
     [SerializeField] float ySpeed = 5f;
 
+    [Header("Bounds")]
+    [SerializeField] float leftBound = -6.5f;
+    [SerializeField] float rightBound = 6.5f;
+    [SerializeField] float botBound = -3.3f;
+    [SerializeField] float topBound = 4f;
+
     [Header("Jumping")]
     [SerializeField] float jumpForce = 3f;
     [SerializeField] float castDist = 1f;
@@ -56,6 +62,12 @@ public class PlayerController : MonoBehaviour
         verAxis = Input.GetAxis("Vertical");
 
         anim.SetBool("onGlider", onGlider);
+
+        // clamp X value
+        Vector3 clampPos = transform.position;
+        clampPos.x = Mathf.Clamp(clampPos.x, leftBound, rightBound);
+        clampPos.y = Mathf.Clamp(clampPos.y, botBound, topBound);
+        transform.position = clampPos;
 
         if (!onGlider)
         {
