@@ -63,11 +63,7 @@ public class PlayerController : MonoBehaviour
 
         anim.SetBool("onGlider", onGlider);
 
-        // clamp X value
-        Vector3 clampPos = transform.position;
-        clampPos.x = Mathf.Clamp(clampPos.x, leftBound, rightBound);
-        clampPos.y = Mathf.Clamp(clampPos.y, botBound, topBound);
-        transform.position = clampPos;
+        ClampPosition();
 
         if (!onGlider)
         {
@@ -94,19 +90,35 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.X))
         {
-            Instantiate(bulletPrefab, shootPoint.position, Quaternion.Euler(Vector3.zero));
-            anim.SetTrigger("shoot");
-            audioSource.PlayOneShot(shootSound);
+            if (onGlider)
+            {
+                Instantiate(bulletPrefab, shootPoint.position, Quaternion.Euler(Vector3.zero));
+                anim.SetTrigger("shoot");
+                audioSource.PlayOneShot(shootSound);
+            }
+            else
+            {
+                if (Mathf.Abs(horAxis) < 0.01f)
+                {
+                    Instantiate(bulletPrefab, shootPoint.position, Quaternion.Euler(Vector3.zero));
+                    anim.SetTrigger("shoot");
+                    audioSource.PlayOneShot(shootSound);
+                }
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.C)) { shield.Activate(); }
-        if (Input.GetKeyUp(KeyCode.C)) { shield.Deactivate(); }
+        if (onGlider)
+        {
+            if (Input.GetKeyDown(KeyCode.C)) { shield.Activate(); }
+            if (Input.GetKeyUp(KeyCode.C)) { shield.Deactivate(); }
+        }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (onGlider)
             {
-                onGlider = !onGlider;
+                shield.Deactivate();
+                onGlider = false;
                 rb.isKinematic = false;
                 rb.velocity += new Vector2(dismountForce * Mathf.Sign(rb.velocity.x), dismountForce);
                 glider.Dismount();
@@ -130,10 +142,18 @@ public class PlayerController : MonoBehaviour
         else { GroundMovement(); }
     }
 
+    void ClampPosition()
+    {
+        // clamp pos values
+        Vector3 clampPos = transform.position;
+        clampPos.x = Mathf.Clamp(clampPos.x, leftBound, rightBound);
+        if (onGlider) { clampPos.y = Mathf.Clamp(clampPos.y, botBound, topBound); }
+        transform.position = clampPos;
+    }
+
     void GliderMovement()
     {
         rb.velocity = new Vector2(horAxis * xSpeed, verAxis * ySpeed);
-
         transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, -rb.velocity.x);
     }
 

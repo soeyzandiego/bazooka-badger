@@ -9,27 +9,24 @@ public class HealthPickup : MonoBehaviour, IPickup
     [SerializeField] AudioClip pickUpSound;
 
     PlayerHealth playerHealth;
-    AudioSource audioSource;
 
     // Start is called before the first frame update
     void Start()
     {
         playerHealth = FindObjectOfType<PlayerHealth>();
-        audioSource = GetComponent<AudioSource>();
     }
 
     public void PickUp()
     {
-        // TODO move sounds somewhere else bc the object will be destroyed before the sound plays
         if (playerHealth.HealthPercentage() == 1) 
         {
             GameManager.ModifyScore(bonusValue);
-            audioSource.PlayOneShot(bonusSound);
+            FindObjectOfType<AudioPlayer>().PlayAudio(bonusSound);
         }
         else 
         { 
             playerHealth.Heal(1);
-            audioSource.PlayOneShot(pickUpSound);
+            FindObjectOfType<AudioPlayer>().PlayAudio(pickUpSound);
         }
 
         Destroy(gameObject);

@@ -5,11 +5,14 @@ using UnityEngine;
 public class TempGlider : MonoBehaviour
 {
     [HideInInspector] public bool colliding = false;
+    [HideInInspector] public bool lost = false;
 
     void Update()
     {
         float speed = PlatformManager.scrollSpeed / 1.75f;
-        transform.position -= new Vector3(speed * Time.deltaTime, 0);
+        if (!lost) { transform.position -= new Vector3(speed * Time.deltaTime, 0); }
+
+        if (transform.position.x < -7.9f) { lost = true; }
     }
 
     public void Activate()
@@ -20,7 +23,13 @@ public class TempGlider : MonoBehaviour
 
     IEnumerator ActivateTemp()
     {
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSeconds(0.55f);
         colliding = true;
+    }
+
+    public void NewGlider(Vector2 newPos)
+    {
+        lost = false;
+        transform.position = newPos;
     }
 }

@@ -7,6 +7,7 @@ public class PlatformManager : MonoBehaviour
     [Header("Spawn Area")]
     [SerializeField] float maxY;
 
+    [Space(20)]
     [SerializeField] GameObject[] prefabs;
 
     public static float scrollSpeed = 1.15f;
@@ -28,12 +29,15 @@ public class PlatformManager : MonoBehaviour
         }
 
         enemySpawner.ChanceSpawn(platforms);
+        SetMoving(true);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetMoving(bool _moving)
     {
-        
+        foreach (Platform platform in platforms)
+        {
+            platform.moving = _moving;
+        }
     }
 
     private void OnDrawGizmos()

@@ -6,7 +6,7 @@ public class Platform : MonoBehaviour
 {
     [SerializeField] public bool ignoreSpawn = false;
 
-    bool moving = true;
+    [HideInInspector] public bool moving = true;
 
     // Update is called once per frame
     void Update()

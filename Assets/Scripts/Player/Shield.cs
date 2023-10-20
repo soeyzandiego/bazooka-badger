@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Shield : MonoBehaviour
 {
@@ -11,8 +12,10 @@ public class Shield : MonoBehaviour
 
     [SerializeField] AudioClip openSound;
 
+    [SerializeField] Slider chargeBar;
+
     float shieldCharge;
-    bool active = false;
+    float cooldownTimer;
 
     public enum ShieldStatus
     {
@@ -21,8 +24,7 @@ public class Shield : MonoBehaviour
         BROKEN
     };
 
-    ShieldStatus status;
-
+    ShieldStatus status = ShieldStatus.CHARGING;
     PlayerController controller;
     Animator anim;
 
@@ -32,41 +34,65 @@ public class Shield : MonoBehaviour
         shieldCharge = maxShield;
         controller = GetComponentInParent<PlayerController>();
         anim = GetComponent<Animator>();
+
+        chargeBar.maxValue = maxShield;
+        chargeBar.value = shieldCharge;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (active)
+        switch (status)
         {
-            shieldCharge -= burnSpeed * Time.deltaTime;
-        }
-        else
-        {
-            shieldCharge += chargeSpeed * Time.deltaTime;
+            case ShieldStatus.ACTIVE:
+                shieldCharge -= burnSpeed * Time.deltaTime;
+                if (shieldCharge <= 0.05f) 
+                {
+                    anim.SetBool("active", false);
+                    status = ShieldStatus.BROKEN;
+                    shieldCharge = 0;
+                    StartCoroutine(Cooldown());
+                }
+                break;
+            case ShieldStatus.CHARGING:
+                shieldCharge += chargeSpeed * Time.deltaTime;
+                break;
+            case ShieldStatus.BROKEN:
+                break;
         }
 
         shieldCharge = Mathf.Clamp(shieldCharge, 0, maxShield);
+        chargeBar.value = shieldCharge;
     }
 
     public void Activate()
     {
-        active = true;
+        if (status == ShieldStatus.BROKEN) 
+        {
+            anim.SetBool("active", false);
+            return; 
+        }
+
         if (status == ShieldStatus.CHARGING) { status = ShieldStatus.ACTIVE; }
 
-        anim.SetBool("active", active);
+        anim.SetBool("active", true);
         controller.PlayAudio(openSound);
     }
 
     public void Deactivate()
     {
-        active = false;
         if (status == ShieldStatus.ACTIVE) { status = ShieldStatus.CHARGING; }
-        anim.SetBool("active", active);
+        anim.SetBool("active", false);
     }
 
     public void DamageShield(int value)
     {
         shieldCharge -= value;
+    }
+
+    IEnumerator Cooldown()
+    {
+        yield return new WaitForSeconds(cooldown);
+        status = ShieldStatus.CHARGING;
     }
 }

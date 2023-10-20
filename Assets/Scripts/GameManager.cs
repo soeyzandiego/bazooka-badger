@@ -88,14 +88,15 @@ public class GameManager : MonoBehaviour
         }
 
         // TODO no magic numbers smh
-        if (gameOverSelect == 0) { selectArrow.rectTransform.anchoredPosition = new Vector3(-325, -220); }
-        else { selectArrow.rectTransform.anchoredPosition = new Vector3(89, -220); }
+        if (gameOverSelect == 0) { selectArrow.rectTransform.anchoredPosition = new Vector3(-254, -170.5f); }
+        else { selectArrow.rectTransform.anchoredPosition = new Vector3(106, -170.5f); }
 
         if (Input.GetKeyDown(KeyCode.X))
         {
             if (gameOverSelect == 0) 
             { 
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                score = 0;
                 state = GameState.PLAYING;
             }
             else 

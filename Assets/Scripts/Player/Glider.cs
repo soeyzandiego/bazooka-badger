@@ -25,7 +25,6 @@ public class Glider : MonoBehaviour
             // TODO gradually rotate back to upright
             tempGlider.transform.rotation = Quaternion.Euler(0, 0, Mathf.Lerp(transform.rotation.z, 0, 0.5f));
             tempGlider.Activate();
-            
         }
         else
         {
