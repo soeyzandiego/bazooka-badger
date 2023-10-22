@@ -56,12 +56,12 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (dead) { return; }
+        anim.SetBool("onGlider", onGlider);
+        
+        if (dead || GameManager.state != GameManager.GameState.PLAYING) { return; }
         
         horAxis = Input.GetAxis("Horizontal");
         verAxis = Input.GetAxis("Vertical");
-
-        anim.SetBool("onGlider", onGlider);
 
         ClampPosition();
 

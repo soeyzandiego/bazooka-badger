@@ -29,7 +29,7 @@ public class PlatformManager : MonoBehaviour
         }
 
         enemySpawner.ChanceSpawn(platforms);
-        SetMoving(true);
+        SetMoving(false);
     }
 
     public void SetMoving(bool _moving)

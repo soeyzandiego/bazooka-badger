@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
         GAME_OVER
     };
 
-    static GameState state = GameState.WAITING;
+    [HideInInspector] public static GameState state = GameState.WAITING;
 
     // Start is called before the first frame update
     void Start()
@@ -46,6 +46,16 @@ public class GameManager : MonoBehaviour
 
         switch (state)
         {
+            case GameState.WAITING:
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    state = GameState.PLAYING;
+                    FindObjectOfType<PlatformManager>().SetMoving(true);
+                }
+            break;
+            case GameState.COUNTING_DOWN:
+
+            break;
             case GameState.GAME_OVER:
                 GameOver();
             break;
@@ -104,10 +114,5 @@ public class GameManager : MonoBehaviour
                 Application.Quit();
             }
         }
-    }
-
-    public void PlayAudio(AudioClip sound)
-    {
-
     }
 }
