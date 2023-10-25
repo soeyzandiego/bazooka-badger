@@ -10,6 +10,7 @@ public class FallDeathTrigger : MonoBehaviour
         if (player != null)
         {
             player.Damage(100);
+            FindObjectOfType<ScreenShake>().ShakeScreen(0.1f, 0.2f);
         }
     }
 }

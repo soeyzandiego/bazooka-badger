@@ -6,11 +6,10 @@ public class PlatformManager : MonoBehaviour
 {
     [Header("Spawn Area")]
     [SerializeField] float maxY;
+    [SerializeField] float minRecycleOffset = 4f;
+    [SerializeField] float maxRecycleOffset = 6f;
 
-    [Space(20)]
-    [SerializeField] GameObject[] prefabs;
-
-    public static float scrollSpeed = 1.15f;
+    public static float scrollSpeed = 1.5f;
 
     List<Platform> platforms = new List<Platform>();
 
@@ -38,6 +37,22 @@ public class PlatformManager : MonoBehaviour
         {
             platform.moving = _moving;
         }
+    }
+
+    public void Recycle(Platform _platform)
+    {
+        Platform lastPlatform = platforms[platforms.Count - 1];
+
+        platforms.Remove(_platform);
+        platforms.Add(_platform);
+
+        // randomize position based on the position of the last platform
+        float xOffset = Random.Range(minRecycleOffset, maxRecycleOffset);
+        float newY = Random.Range(-maxY, maxY);
+        _platform.transform.position = new Vector2(lastPlatform.transform.position.x + xOffset, newY);
+
+        // chance spawn
+        enemySpawner.ChanceSpawn(_platform);
     }
 
     private void OnDrawGizmos()

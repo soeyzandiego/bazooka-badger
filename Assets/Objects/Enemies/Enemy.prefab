@@ -132,11 +132,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c0f136f47f4c97469007174d6c1dce8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 2120156550767168977, guid: 065a09b86b018274bb7a6d8ee9f0736a, type: 3}
-  shootPoint: {fileID: 5346265332802113385}
+  drops:
+  - pickUpPrefab: {fileID: 1539565798632456121, guid: 3dc2cc3f430ef5a49849ea641ad24959, type: 3}
+    dropChance: 20
+  - pickUpPrefab: {fileID: 1625990052582268617, guid: 8033d90ce336c0f4592bfa5bfc0a0a24, type: 3}
+    dropChance: 45
   pointValue: 10
   minShootDelay: 0.7
   maxShootDelay: 2
+  shootPoint: {fileID: 5346265332802113385}
+  bulletPrefab: {fileID: 2120156550767168977, guid: 065a09b86b018274bb7a6d8ee9f0736a, type: 3}
 --- !u!61 &5346265334482796272
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -176,6 +181,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 6
+  hurtSound: {fileID: 8300000, guid: 5413400bb24858f42a8efd1e54b4ce3f, type: 3}
 --- !u!50 &1642453294
 Rigidbody2D:
   serializedVersion: 4

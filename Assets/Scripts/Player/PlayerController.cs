@@ -58,8 +58,9 @@ public class PlayerController : MonoBehaviour
     {
         anim.SetBool("onGlider", onGlider);
         
-        if (dead || GameManager.state != GameManager.GameState.PLAYING) { return; }
-        
+        if (dead) { return; }
+        if (GameManager.state != GameManager.GameState.PLAYING) { return; }
+
         horAxis = Input.GetAxis("Horizontal");
         verAxis = Input.GetAxis("Vertical");
 

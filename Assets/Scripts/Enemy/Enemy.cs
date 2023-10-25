@@ -4,13 +4,23 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] GameObject bulletPrefab;
-    [SerializeField] Transform shootPoint;
+    [System.Serializable]
+    public class PickUpDrop 
+    {
+        [SerializeField] public GameObject pickUpPrefab;
+        [SerializeField] public int dropChance;
+    }
+
+    [SerializeField] PickUpDrop[] drops;
+
     [SerializeField] int pointValue = 10;
 
     [Header("Shoot")]
     [SerializeField] float minShootDelay = 0.4f;
     [SerializeField] float maxShootDelay = 1.2f;
+    [SerializeField] Transform shootPoint;
+    [SerializeField] GameObject bulletPrefab;
+
 
     float shootTimer;
 
@@ -34,6 +44,9 @@ public class Enemy : MonoBehaviour
         temp.x = -playerDir;
         transform.localScale = temp;
 
+
+        if (GameManager.state != GameManager.GameState.PLAYING) { return; }
+
         if (shootTimer > 0)
         {
             shootTimer -= Time.deltaTime;
@@ -55,6 +68,21 @@ public class Enemy : MonoBehaviour
     public void Kill()
     {
         GameManager.ModifyScore(pointValue);
+
+        if (drops.Length > 0)
+        {
+            foreach (PickUpDrop drop in drops)
+            {
+                int roll = Random.Range(0, 101);
+
+                if (roll <= drop.dropChance)
+                {
+                    Instantiate(drop.pickUpPrefab, transform.position, transform.rotation, transform.parent);
+                    break;
+                }
+            }
+        }
+
         Destroy(gameObject);
         Destroy(this); // if for later, want to do a dead state where the body is on the ground
     }

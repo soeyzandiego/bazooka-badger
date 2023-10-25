@@ -10,12 +10,16 @@ public class Shield : MonoBehaviour
     [SerializeField] float chargeSpeed = 1f;
     [SerializeField] float cooldown = 3f;
 
-    [SerializeField] AudioClip openSound;
-
     [SerializeField] Slider chargeBar;
+    [SerializeField] Animator barAnim;
+   
+    [Header("Audio")]
+    [SerializeField] AudioClip openSound;
+    [SerializeField] AudioClip hitSound;
+    [SerializeField] AudioClip breakSound;
+    [SerializeField] AudioClip brokenSound;
 
     float shieldCharge;
-    float cooldownTimer;
 
     public enum ShieldStatus
     {
@@ -49,20 +53,32 @@ public class Shield : MonoBehaviour
                 if (shieldCharge <= 0.05f) 
                 {
                     anim.SetBool("active", false);
+                    anim.SetTrigger("break");
+                    barAnim.SetBool("broken", true);
+                    
+                    controller.PlayAudio(breakSound);
+
                     status = ShieldStatus.BROKEN;
                     shieldCharge = 0;
                     StartCoroutine(Cooldown());
                 }
+
+                if (shieldCharge <= maxShield / 3) { GetComponent<SpriteRenderer>().color = new Color(179 / 255.0f, 143 / 255.0f, 255 / 255.0f); }
+                else { GetComponent<SpriteRenderer>().color = Color.white; }
                 break;
             case ShieldStatus.CHARGING:
                 shieldCharge += chargeSpeed * Time.deltaTime;
                 break;
             case ShieldStatus.BROKEN:
+                
                 break;
         }
 
         shieldCharge = Mathf.Clamp(shieldCharge, 0, maxShield);
         chargeBar.value = shieldCharge;
+
+        if (GameManager.state == GameManager.GameState.WAITING) { chargeBar.gameObject.SetActive(false); }
+        else { chargeBar.gameObject.SetActive(true); }
     }
 
     public void Activate()
@@ -70,6 +86,7 @@ public class Shield : MonoBehaviour
         if (status == ShieldStatus.BROKEN) 
         {
             anim.SetBool("active", false);
+            controller.PlayAudio(brokenSound);
             return; 
         }
 
@@ -88,11 +105,29 @@ public class Shield : MonoBehaviour
     public void DamageShield(int value)
     {
         shieldCharge -= value;
+        controller.PlayAudio(hitSound);
+        GetComponent<Animator>().SetTrigger("hit");
+    }
+
+    public void AddCharge(float value)
+    {
+        if (status == ShieldStatus.BROKEN) 
+        { 
+            status = ShieldStatus.CHARGING;
+            barAnim.SetBool("broken", false);
+        }
+        shieldCharge += value;
+    }
+
+    public float ChargePercentage()
+    {
+        return shieldCharge / maxShield;
     }
 
     IEnumerator Cooldown()
     {
         yield return new WaitForSeconds(cooldown);
         status = ShieldStatus.CHARGING;
+        barAnim.SetBool("broken", false);
     }
 }

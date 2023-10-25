@@ -23,11 +23,26 @@ public class PlayerHealth : MonoBehaviour
         UpdateHearts();
     }
 
+    void Update()
+    {
+        foreach (Image heart in targetImages)
+        {
+            if (GameManager.state == GameManager.GameState.WAITING)
+            {
+                heart.enabled = false;
+            }
+            else
+            {
+                heart.enabled = true;
+            }
+        }
+    }
 
     public void Damage(int value)
     {
         curHealth -= value;
         UpdateHearts();
+        GetComponent<Animator>().SetTrigger("hurt");
 
         if (curHealth <= 0)
         {

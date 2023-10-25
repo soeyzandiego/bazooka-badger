@@ -17,6 +17,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMP_Text highScoreText;
     [SerializeField] Image selectArrow;
 
+    [Header("Start Screen")]
+    [SerializeField] GameObject startScreen;
+    [SerializeField] TMP_Text startHighScoreText;
+
     static int score = 0;
     static int highScore = 0;
 
@@ -47,12 +51,17 @@ public class GameManager : MonoBehaviour
         switch (state)
         {
             case GameState.WAITING:
+                startScreen.SetActive(true);
+                scoreText.gameObject.SetActive(false);
+                startHighScoreText.text = "HI-SCORE: " + highScore.ToString();
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     state = GameState.PLAYING;
                     FindObjectOfType<PlatformManager>().SetMoving(true);
+                    scoreText.gameObject.SetActive(true);
+                    startScreen.SetActive(false);
                 }
-            break;
+                break;
             case GameState.COUNTING_DOWN:
 
             break;
@@ -64,6 +73,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R)) 
         { 
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            state = GameState.WAITING;
             score = 0;
         }
     }
@@ -107,7 +117,7 @@ public class GameManager : MonoBehaviour
             { 
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
                 score = 0;
-                state = GameState.PLAYING;
+                state = GameState.WAITING;
             }
             else 
             { 
