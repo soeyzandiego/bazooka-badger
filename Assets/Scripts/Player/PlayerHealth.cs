@@ -7,9 +7,12 @@ using UnityEngine.UI;
 public class PlayerHealth : MonoBehaviour
 {
     [SerializeField][Range(1, 8)] int maxHealth = 6;
-    [SerializeField] AudioClip hurtSound;
     [SerializeField] Image[] targetImages;
     [SerializeField] Sprite[] heartSprites;
+
+    [Header("Audio")]
+    [SerializeField] AudioClip hurtSound;
+    [SerializeField] AudioClip deathSound;
 
     int curHealth;
 
@@ -47,7 +50,9 @@ public class PlayerHealth : MonoBehaviour
         if (curHealth <= 0)
         {
             controller.Kill();
+            controller.PlayAudio(deathSound);
             GameManager.ChangeState(GameManager.GameState.GAME_OVER);
+            Destroy(this);
         }
 
         controller.PlayAudio(hurtSound);

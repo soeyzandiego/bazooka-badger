@@ -8,6 +8,10 @@ public class HealthPickup : MonoBehaviour, IPickup
     [SerializeField] AudioClip bonusSound;
     [SerializeField] AudioClip pickUpSound;
 
+    [Header("Bonus Indicator")]
+    [SerializeField] GameObject bonusIndicator;
+    [SerializeField] Vector3 indicatorOffset = new Vector3(0.5f, 0.5f);
+
     PlayerHealth playerHealth;
 
     // Start is called before the first frame update
@@ -21,6 +25,7 @@ public class HealthPickup : MonoBehaviour, IPickup
         if (playerHealth.HealthPercentage() == 1) 
         {
             GameManager.ModifyScore(bonusValue);
+            Instantiate(bonusIndicator, transform.position + indicatorOffset, transform.rotation);
             FindObjectOfType<AudioPlayer>().PlayAudio(bonusSound);
         }
         else 

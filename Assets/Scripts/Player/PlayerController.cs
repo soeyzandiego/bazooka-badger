@@ -33,21 +33,19 @@ public class PlayerController : MonoBehaviour
     // component references
     Animator anim;
     Rigidbody2D rb;
-    SpriteRenderer sprite;
     Glider glider;
     AudioSource audioSource;
     Shield shield;
 
     float horAxis;
     float verAxis;
-
+    float faceDir = 1;
 
     // Start is called before the first frame update
     void Start()
     {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
-        sprite = GetComponent<SpriteRenderer>();
         glider = GetComponentInChildren<Glider>();
         audioSource = GetComponent<AudioSource>();
         shield = GetComponentInChildren<Shield>();
@@ -58,7 +56,11 @@ public class PlayerController : MonoBehaviour
     {
         anim.SetBool("onGlider", onGlider);
         
-        if (dead) { return; }
+        if (dead) 
+        {
+            transform.position = new Vector2(transform.position.x, transform.position.y - 1.5f * Time.deltaTime);
+            return; 
+        }
         if (GameManager.state != GameManager.GameState.PLAYING) { return; }
 
         horAxis = Input.GetAxis("Horizontal");
@@ -77,6 +79,14 @@ public class PlayerController : MonoBehaviour
                 audioSource.PlayOneShot(jumpSound);
             }
 
+            if (Input.GetKeyDown(KeyCode.RightArrow)) { faceDir = 1; }
+            if (Input.GetKeyDown(KeyCode.LeftArrow)) { faceDir = -1; }
+            print(faceDir);
+
+            Vector3 temp = transform.localScale;
+            temp.x = faceDir;
+            transform.localScale = temp;
+
             // cut the velocity of the jump if space is let go
             if (!grounded)
             {
@@ -87,8 +97,8 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-        
 
+        // shoot
         if (Input.GetKeyDown(KeyCode.X))
         {
             if (onGlider)
@@ -101,19 +111,22 @@ public class PlayerController : MonoBehaviour
             {
                 if (Mathf.Abs(horAxis) < 0.01f)
                 {
-                    Instantiate(bulletPrefab, shootPoint.position, Quaternion.Euler(Vector3.zero));
+                    GameObject newBullet = Instantiate(bulletPrefab, shootPoint.position, Quaternion.Euler(Vector3.zero));
+                    newBullet.GetComponent<Bullet>().SetDir(new Vector2(transform.localScale.x, 0));
                     anim.SetTrigger("shoot");
                     audioSource.PlayOneShot(shootSound);
                 }
             }
         }
 
+        // shield
         if (onGlider)
         {
             if (Input.GetKeyDown(KeyCode.C)) { shield.Activate(); }
             if (Input.GetKeyUp(KeyCode.C)) { shield.Deactivate(); }
         }
 
+        // dismount
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (onGlider)
@@ -121,7 +134,7 @@ public class PlayerController : MonoBehaviour
                 shield.Deactivate();
                 onGlider = false;
                 rb.isKinematic = false;
-                rb.velocity += new Vector2(dismountForce * Mathf.Sign(rb.velocity.x), dismountForce);
+                rb.AddForce(new Vector2(dismountForce * Mathf.Sign(rb.velocity.x), dismountForce), ForceMode2D.Impulse);
                 glider.Dismount();
                 audioSource.PlayOneShot(jumpSound);
             }
@@ -139,6 +152,9 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (dead) { return; }
+        if (GameManager.state != GameManager.GameState.PLAYING) { return; }
+
         if (onGlider) { GliderMovement(); }
         else { GroundMovement(); }
     }
@@ -163,11 +179,11 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.Euler(Vector3.zero);
         rb.velocity = new Vector2(horAxis * xSpeed, rb.velocity.y);
 
-        if (Mathf.Abs(rb.velocity.x) > 0)
-        {
-            if (Mathf.Sign(rb.velocity.x) == 1) { sprite.flipX = false; }
-            else if (Mathf.Sign(rb.velocity.x) == -1) { sprite.flipX = true; }
-        }
+        //if (Mathf.Abs(rb.velocity.x) > 0)
+        //{
+        //    if (Mathf.Sign(rb.velocity.x) == 1) { sprite.flipX = false; }
+        //    else if (Mathf.Sign(rb.velocity.x) == -1) { sprite.flipX = true; }
+        //}
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, castDist, LayerMask.GetMask("Ground"));
         Debug.DrawRay(transform.position, Vector2.down * castDist, Color.red);
@@ -188,16 +204,23 @@ public class PlayerController : MonoBehaviour
     // TODO change to raycast, so can only mount from top
     void OnTriggerEnter2D(Collider2D collision)
     {
+        // mount glider
         if (!onGlider)
         {
             TempGlider collGlider = collision.gameObject.GetComponent<TempGlider>();
             if (collGlider != null && collGlider.colliding)
             {
+                // face player forward
+                Vector3 temp = transform.localScale;
+                temp.x = 1;
+                transform.localScale = temp;
+                
                 glider.Mount();
                 onGlider = true;
                 rb.isKinematic = true;
-                sprite.flipX = false;
+                //sprite.flipX = false;
                 collGlider.colliding = false;
+
                 return;
             }
 

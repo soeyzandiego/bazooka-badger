@@ -23,7 +23,7 @@ public class TempGlider : MonoBehaviour
 
     IEnumerator ActivateTemp()
     {
-        yield return new WaitForSeconds(0.55f);
+        yield return new WaitForSeconds(0.5f);
         colliding = true;
     }
 

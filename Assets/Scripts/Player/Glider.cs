@@ -4,14 +4,16 @@ using UnityEngine;
 
 public class Glider : MonoBehaviour
 {
+    [SerializeField] GameObject particles;
     [SerializeField] GameObject gliderPrefab;
 
     TempGlider tempGlider = null;
 
-    // Update is called once per frame
-    void Update()
-    {
+    Vector3 particleOffset;
 
+    void Start()
+    {
+        particleOffset = particles.transform.position - transform.position;
     }
 
     public void Dismount()
@@ -22,22 +24,21 @@ public class Glider : MonoBehaviour
             GameObject tempGliderObject = Instantiate(gliderPrefab, transform.position, transform.rotation);
             tempGlider = tempGliderObject.GetComponent<TempGlider>();
             tempGlider.transform.parent = null;
-            // TODO gradually rotate back to upright
-            tempGlider.transform.rotation = Quaternion.Euler(0, 0, Mathf.Lerp(transform.rotation.z, 0, 0.5f));
-            tempGlider.Activate();
         }
-        else
-        {
-            tempGlider.gameObject.SetActive(true);
-            tempGlider.transform.position = transform.position;
-            tempGlider.transform.rotation = Quaternion.Euler(0, 0, 0);
-            tempGlider.Activate();
-        }
+        tempGlider.gameObject.SetActive(true);
+        tempGlider.transform.position = transform.position;
+        // TODO gradually rotate back to upright
+        tempGlider.transform.rotation = Quaternion.Euler(0, 0, Mathf.Lerp(transform.rotation.z, 0, 0.5f));
+        tempGlider.Activate();
+        particles.transform.position = tempGlider.transform.position + particleOffset;
+        particles.transform.parent = tempGlider.transform;
     }
 
     public void Mount()
     {
         gameObject.SetActive(true);
         tempGlider.gameObject.SetActive(false);
+        particles.transform.position = transform.position + particleOffset;
+        particles.transform.parent = transform;
     }
 }

@@ -98,6 +98,8 @@ MonoBehaviour:
   bonusValue: 10
   bonusSound: {fileID: 8300000, guid: 5427f7e7cab8157409c51b8070d67e78, type: 3}
   pickUpSound: {fileID: 8300000, guid: f879531e907a989488933ec544a03768, type: 3}
+  bonusIndicator: {fileID: 1143074820096352118, guid: 1a01d04daa1ccce468e7f10279223529, type: 3}
+  indicatorOffset: {x: 0.5, y: 0.5, z: 0}
 --- !u!1 &1625990053633305582
 GameObject:
   m_ObjectHideFlags: 0

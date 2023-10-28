@@ -57,13 +57,14 @@ public class Shield : MonoBehaviour
                     barAnim.SetBool("broken", true);
                     
                     controller.PlayAudio(breakSound);
+                    FindObjectOfType<ScreenShake>().ShakeScreen(0.06f, 0.1f);
 
-                    status = ShieldStatus.BROKEN;
                     shieldCharge = 0;
+                    status = ShieldStatus.BROKEN;
                     StartCoroutine(Cooldown());
                 }
 
-                if (shieldCharge <= maxShield / 3) { GetComponent<SpriteRenderer>().color = new Color(179 / 255.0f, 143 / 255.0f, 255 / 255.0f); }
+                if (shieldCharge <= maxShield / 4) { GetComponent<SpriteRenderer>().color = new Color(179 / 255.0f, 143 / 255.0f, 255 / 255.0f); }
                 else { GetComponent<SpriteRenderer>().color = Color.white; }
                 break;
             case ShieldStatus.CHARGING:
@@ -86,6 +87,7 @@ public class Shield : MonoBehaviour
         if (status == ShieldStatus.BROKEN) 
         {
             anim.SetBool("active", false);
+            FindObjectOfType<ScreenShake>().ShakeScreen(0.07f, 0.1f);
             controller.PlayAudio(brokenSound);
             return; 
         }
