@@ -80,8 +80,8 @@ public class PlayerController : MonoBehaviour
             }
 
             if (Input.GetKeyDown(KeyCode.RightArrow)) { faceDir = 1; }
-            if (Input.GetKeyDown(KeyCode.LeftArrow)) { faceDir = -1; }
-            print(faceDir);
+            else if (Input.GetKeyDown(KeyCode.LeftArrow)) { faceDir = -1; }
+
 
             Vector3 temp = transform.localScale;
             temp.x = faceDir;
@@ -127,7 +127,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // dismount
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && GameManager.state == GameManager.GameState.PLAYING)
         {
             if (onGlider)
             {
@@ -214,11 +214,11 @@ public class PlayerController : MonoBehaviour
                 Vector3 temp = transform.localScale;
                 temp.x = 1;
                 transform.localScale = temp;
-                
+                faceDir = 1;
+
                 glider.Mount();
                 onGlider = true;
                 rb.isKinematic = true;
-                //sprite.flipX = false;
                 collGlider.colliding = false;
 
                 return;
@@ -237,6 +237,7 @@ public class PlayerController : MonoBehaviour
     public void Kill()
     {
         dead = true;
+        Destroy(rb);
     }
 
     void OnDrawGizmos()

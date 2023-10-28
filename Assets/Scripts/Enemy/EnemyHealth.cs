@@ -26,6 +26,7 @@ public class EnemyHealth : MonoBehaviour
     {
         if (dead) { return; }
         curHealth -= value;
+        GetComponent<Animator>().SetTrigger("hurt");
         FindObjectOfType<AudioPlayer>().PlayAudio(hurtSound);
 
         if (curHealth <= 0)

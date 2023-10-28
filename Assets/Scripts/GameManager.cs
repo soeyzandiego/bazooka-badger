@@ -16,10 +16,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMP_Text endScoreText;
     [SerializeField] TMP_Text highScoreText;
     [SerializeField] Image selectArrow;
+    [SerializeField] AudioClip selectSound;
 
     [Header("Start Screen")]
     [SerializeField] GameObject startScreen;
     [SerializeField] TMP_Text startHighScoreText;
+    [SerializeField] AudioClip startSound;
 
     static int score = 0;
     static int highScore = 0;
@@ -60,6 +62,7 @@ public class GameManager : MonoBehaviour
                     FindObjectOfType<PlatformManager>().SetMoving(true);
                     scoreText.gameObject.SetActive(true);
                     startScreen.SetActive(false);
+                    FindObjectOfType<AudioPlayer>().PlayAudio(startSound);
                 }
                 break;
             case GameState.COUNTING_DOWN:
@@ -70,12 +73,13 @@ public class GameManager : MonoBehaviour
             break;
         }
 
-        if (Input.GetKeyDown(KeyCode.R)) 
-        { 
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            state = GameState.WAITING;
-            score = 0;
-        }
+        // restart
+        //if (Input.GetKeyDown(KeyCode.R)) 
+        //{ 
+        //    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        //    state = GameState.WAITING;
+        //    score = 0;
+        //}
     }
 
     public static void ModifyScore(int _value)
@@ -100,11 +104,13 @@ public class GameManager : MonoBehaviour
         {
             if (gameOverSelect == 0) { gameOverSelect = 1; }
             else { gameOverSelect = 0; }
+            FindObjectOfType<AudioPlayer>().PlayAudio(selectSound);
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             if (gameOverSelect == 1) { gameOverSelect = 0; }
             else { gameOverSelect = 1; }
+            FindObjectOfType<AudioPlayer>().PlayAudio(selectSound);
         }
 
         // TODO no magic numbers smh

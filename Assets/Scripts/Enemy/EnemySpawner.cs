@@ -13,14 +13,6 @@ public class EnemySpawner : MonoBehaviour
 
     [SerializeField] SpawnInfo[] enemies;
 
-    PlatformManager platformManager;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        platformManager = GetComponent<PlatformManager>();
-    }
-
     public void ChanceSpawn(List<Platform> platforms)
     {
         foreach (Platform curPlatform in platforms)
